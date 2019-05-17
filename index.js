@@ -1,14 +1,16 @@
-const express = require('express')
+const express = require('express') //miniframework for api
 const app = express()
 const port = 3000
-const request = require('request')
+const request = require('request') //used to make requests for callbacks
 const bodyParser = require('body-parser')
-require('body-parser-xml')(bodyParser)
-const xml2js = require('xml2js')
+require('body-parser-xml')(bodyParser) //used for express to parse incoming xml objects
+const xml2js = require('xml2js') //used to parse outgoing xml objects
 
 app.use(express.json())
 app.use(bodyParser.xml())
 
+//Global variable for storing applications
+//Yes global variables are bad but this is sufficient for a small emulator-ish
 applications = {}
 
 /**
@@ -73,6 +75,8 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
 
 /**
  * Route to handle creating a new application
+ *
+ * expects xml body
  */
 app.post('/api/accounts/:account/applications', function (req, res)  {
     var requestBody = req.body["Application"]
