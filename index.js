@@ -4,6 +4,7 @@ const port = 3000
 const request = require('request')
 const bodyParser = require('body-parser')
 require('body-parser-xml')(bodyParser)
+const xml2js = require('xml2js')
 
 app.use(express.json())
 app.use(bodyParser.xml())
@@ -68,6 +69,37 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
     }
     messageDeliveredEvent(responseBody)
     res.json(responseBody)
+})
+
+/**
+ * Route to handle creating a new application
+ */
+app.post('/api/accounts/:account/applications', function (req, res)  {
+    var requestBody = req.body["Application"]
+    var applicationId = "1234" //generate random string
+    var serviceType = requestBody["ServiceType"]
+    var appName = requestBody["AppName"]
+    var callbackUrl = requestBody["CallbackUrl"]
+    var userId = requestBody["CallbackCreds"][0]["UserId"]
+    var password = requestBody["CallbackCreds"][0]["Password"]
+    var responseBody = {
+        ApplicationProvisioningResponse: {
+            Application: {
+                ApplicationId: applicationId,
+                ServiceType: serviceType,
+                AppName: appName,
+                CallbackUrl: callbackUrl,
+                CallbackCreds: {
+                    UserId: userId,
+                    Password: password
+                }
+            }
+        }
+    }
+    var builder = new xml2js.Builder()
+    var xmlString = builder.buildObject(responseBody)
+    res.set('Content-Type', 'application/xml')
+    res.send(xmlString)
 })
 
 /**
