@@ -4,11 +4,12 @@ const port = 3000
 const request = require('request')
 
 app.use(express.json())
+
 /**
  * Handles callbacks for message delivered events
  */
 function messageDeliveredEvent(responseBody) {
-    //todo: set random time
+    //todo: set random timeout time, set callbackBody time
     setTimeout(function() {
         var callbackBody = {
             type: "message-delivered",
@@ -37,6 +38,7 @@ function callbackDestinationLookup(applicationId) {
  * Route to handle incoming message requests
  */
 app.post('/api/v2/users/:accountId/messages', function (req, res)  {
+    //todo: fix segmentCount, id, and time
     var accountId = req.params["accountId"]
     var requestBody = req.body
     var to = requestBody["to"]
