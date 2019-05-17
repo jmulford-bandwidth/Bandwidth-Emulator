@@ -14,6 +14,15 @@ app.use(bodyParser.xml())
 applications = {}
 
 /**
+ * Generates random string
+ *
+ * Taken from https://gist.github.com/6174/6062387
+ */
+function randomString() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+}
+
+/**
  * Handles callbacks for message delivered events
  */
 function messageDeliveredEvent(responseBody) {
@@ -55,7 +64,7 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
     var applicationId = requestBody["applicationId"]
     var tag = requestBody["tag"]
     var segmentCount = 1 //len(text) / 160??
-    var id = '123' //random string
+    var id = randomString()
     var time = '2016-09-14T18:20:16Z' //current time in this format
     var responseBody = {
         to: to,
@@ -80,7 +89,7 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
  */
 app.post('/api/accounts/:account/applications', function (req, res)  {
     var requestBody = req.body["Application"]
-    var applicationId = "1234" //generate random string
+    var applicationId = randomString() 
     var serviceType = requestBody["ServiceType"][0]
     var appName = requestBody["AppName"][0]
     var callbackUrl = requestBody["CallbackUrl"][0]
@@ -104,7 +113,6 @@ app.post('/api/accounts/:account/applications', function (req, res)  {
     var builder = new xml2js.Builder()
     var xmlString = builder.buildObject(responseBody)
     res.set('Content-Type', 'application/xml')
-    console.log(applications)
     res.send(xmlString)
 })
 
