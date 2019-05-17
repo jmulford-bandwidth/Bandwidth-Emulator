@@ -30,14 +30,20 @@ function randomTime() {
 }
 
 /**
+ * Gets the current datetime in ISO format
+ */
+function getCurrentDateTime() {
+    return new Date().toISOString()
+}
+
+/**
  * Handles callbacks for message delivered events
  */
 function messageDeliveredEvent(responseBody) {
-    //todo: set callbackBody time
     setTimeout(function() {
         var callbackBody = {
             type: "message-delivered",
-            time: "2016-09-14T18:20:19Z", //current time in this format
+            time: getCurrentDateTime(),
             message: responseBody
         }
         callbackDestination = callbackDestinationLookup(responseBody["applicationId"])
@@ -62,7 +68,7 @@ function callbackDestinationLookup(applicationId) {
  * Route to handle incoming message requests
  */
 app.post('/api/v2/users/:accountId/messages', function (req, res)  {
-    //todo: fix segmentCount and time
+    //todo: fix segmentCount
     var accountId = req.params["accountId"]
     var requestBody = req.body
     var to = requestBody["to"]
@@ -72,7 +78,7 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
     var tag = requestBody["tag"]
     var segmentCount = 1 //len(text) / 160??
     var id = randomString()
-    var time = '2016-09-14T18:20:16Z' //current time in this format
+    var time = getCurrentDateTime() 
     var responseBody = {
         to: to,
         from: from,
