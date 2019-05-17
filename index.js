@@ -2,8 +2,13 @@ const express = require('express')
 const app = express()
 const port = 3000
 const request = require('request')
+const bodyParser = require('body-parser')
+require('body-parser-xml')(bodyParser)
 
 app.use(express.json())
+app.use(bodyParser.xml())
+
+applications = {}
 
 /**
  * Handles callbacks for message delivered events
@@ -31,7 +36,7 @@ function messageDeliveredEvent(responseBody) {
  * Looks up the URL to receive the callback based on the applicationId
  */
 function callbackDestinationLookup(applicationId) {
-    return "https://eaae96e9.ngrok.io/callbacks"
+    return applications[applicationId]["CallbackUrl"]
 }
 
 /**
