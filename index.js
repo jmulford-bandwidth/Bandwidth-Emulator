@@ -77,11 +77,11 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
 app.post('/api/accounts/:account/applications', function (req, res)  {
     var requestBody = req.body["Application"]
     var applicationId = "1234" //generate random string
-    var serviceType = requestBody["ServiceType"]
-    var appName = requestBody["AppName"]
-    var callbackUrl = requestBody["CallbackUrl"]
-    var userId = requestBody["CallbackCreds"][0]["UserId"]
-    var password = requestBody["CallbackCreds"][0]["Password"]
+    var serviceType = requestBody["ServiceType"][0]
+    var appName = requestBody["AppName"][0]
+    var callbackUrl = requestBody["CallbackUrl"][0]
+    var userId = requestBody["CallbackCreds"][0]["UserId"][0]
+    var password = requestBody["CallbackCreds"][0]["Password"][0]
     var responseBody = {
         ApplicationProvisioningResponse: {
             Application: {
@@ -96,9 +96,11 @@ app.post('/api/accounts/:account/applications', function (req, res)  {
             }
         }
     }
+    applications[applicationId] = responseBody["ApplicationProvisioningResponse"]["Application"]
     var builder = new xml2js.Builder()
     var xmlString = builder.buildObject(responseBody)
     res.set('Content-Type', 'application/xml')
+    console.log(applications)
     res.send(xmlString)
 })
 
