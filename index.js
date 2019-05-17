@@ -1,20 +1,35 @@
 const express = require('express')
 const app = express()
-app.use(express.json())
 const port = 3000
+const request = require('request')
 
+app.use(express.json())
+/**
+ * Handles callbacks for message delivered events
+ */
 function messageDeliveredEvent(responseBody) {
     //todo: set random time
     setTimeout(function() {
-        callbackBody = {
+        var callbackBody = {
             type: "message-delivered",
             time: "2016-09-14T18:20:19Z", //current time in this format
             message: responseBody
         }
+        callbackDestination = callbackDestinationLookup(responseBody["applicationId"])
         console.log(callbackBody)
     }, 2000)
 }
 
+/**
+ * Looks up the URL to receive the callback based on the applicationId
+ */
+function callbackDestinationLookup(applicationId) {
+    return applicationId
+}
+
+/**
+ * Route to handle incoming message requests
+ */
 app.post('/api/v2/users/:accountId/messages', function (req, res)  {
     var accountId = req.params["accountId"]
     var requestBody = req.body
