@@ -23,10 +23,17 @@ function randomString() {
 }
 
 /**
+ * Generates a random time to delay events up to 10 seconds
+ */
+function randomTime() {
+    return Math.random() * 10000
+}
+
+/**
  * Handles callbacks for message delivered events
  */
 function messageDeliveredEvent(responseBody) {
-    //todo: set random timeout time, set callbackBody time
+    //todo: set callbackBody time
     setTimeout(function() {
         var callbackBody = {
             type: "message-delivered",
@@ -41,7 +48,7 @@ function messageDeliveredEvent(responseBody) {
         }, function (error, response, body) {
             //do nothing
         })
-    }, 4000)
+    }, randomTime())
 }
 
 /**
@@ -55,7 +62,7 @@ function callbackDestinationLookup(applicationId) {
  * Route to handle incoming message requests
  */
 app.post('/api/v2/users/:accountId/messages', function (req, res)  {
-    //todo: fix segmentCount, id, and time
+    //todo: fix segmentCount and time
     var accountId = req.params["accountId"]
     var requestBody = req.body
     var to = requestBody["to"]
@@ -90,6 +97,7 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
 app.post('/api/accounts/:account/applications', function (req, res)  {
     var requestBody = req.body["Application"]
     var applicationId = randomString() 
+    //Not sure what jank is making all of these arrays but they're all arrays with 1 element...
     var serviceType = requestBody["ServiceType"][0]
     var appName = requestBody["AppName"][0]
     var callbackUrl = requestBody["CallbackUrl"][0]
