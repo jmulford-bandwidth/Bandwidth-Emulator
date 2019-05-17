@@ -16,15 +16,21 @@ function messageDeliveredEvent(responseBody) {
             message: responseBody
         }
         callbackDestination = callbackDestinationLookup(responseBody["applicationId"])
-        console.log(callbackBody)
-    }, 2000)
+        request({
+            method: 'POST',
+            url: callbackDestination,
+            json: callbackBody
+        }, function (error, response, body) {
+            //do nothing
+        })
+    }, 4000)
 }
 
 /**
  * Looks up the URL to receive the callback based on the applicationId
  */
 function callbackDestinationLookup(applicationId) {
-    return applicationId
+    return "https://eaae96e9.ngrok.io/callbacks"
 }
 
 /**
@@ -55,6 +61,17 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
     }
     messageDeliveredEvent(responseBody)
     res.json(responseBody)
+})
+
+/**
+ * Route to handle incoming callbacks
+ *
+ * Note that this route is not part of Bandwidth's API but simply exists as a placeholder for callbacks if needed
+ */
+app.post('/callbacks', function (req, res)  {
+    var requestBody = req.body
+    console.log(requestBody)
+    res.json(requestBody)
 })
 
 app.listen(port, () => console.log(`Bandwidth Emulator-ish is now listening on port ${port}!`))
