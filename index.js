@@ -1,7 +1,45 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
 const port = 3000
 
-app.get('/', (req, res) => res.send('Hello World!'))
+function messageDeliveredEvent(responseBody) {
+    //todo: set random time
+    setTimeout(function() {
+        callbackBody = {
+            type: "message-delivered",
+            time: "2016-09-14T18:20:19Z", //current time in this format
+            message: responseBody
+        }
+        console.log(callbackBody)
+    }, 2000)
+}
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.post('/api/v2/users/:accountId/messages', function (req, res)  {
+    var accountId = req.params["accountId"]
+    var requestBody = req.body
+    var to = requestBody["to"]
+    var from = requestBody["from"]
+    var text = requestBody["text"]
+    var applicationId = requestBody["applicationId"]
+    var tag = requestBody["tag"]
+    var segmentCount = 1 //len(text) / 160??
+    var id = '123' //random string
+    var time = '2016-09-14T18:20:16Z' //current time in this format
+    var responseBody = {
+        to: to,
+        from: from,
+        text: text,
+        applicationId: applicationId,
+        tag: tag,
+        segmentCount: segmentCount,
+        owner: from,
+        id: id,
+        time: time,
+        direction: "out"
+    }
+    messageDeliveredEvent(responseBody)
+    res.json(responseBody)
+})
+
+app.listen(port, () => console.log(`Bandwidth Emulator-ish is now listening on port ${port}!`))

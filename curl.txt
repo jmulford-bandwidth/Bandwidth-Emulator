@@ -1,0 +1,1 @@
+curl -X POST http://localhost:3000/api/v2/users/ll/messages -d '{ "from": "+18888888888", "to": "+19999999999", "text": "Hi friend", "tag": "My tag", "applicationId": "12345"}' --header 'content-type: application/json'
