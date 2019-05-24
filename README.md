@@ -3,3 +3,20 @@
 An API Emulator-ish for Bandwidth's Voice, Messaging, and Numbers APIs. 
 
 Doesn't actually do any phone calls, text messaging, or order numbering.
+
+## Commands
+
+Install dependencies
+```
+npm install
+```
+
+Launch emulator-ish
+```
+node index.js
+```
+
+Run demo script
+```
+sh script.sh
+```
