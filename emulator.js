@@ -12,6 +12,13 @@ app.use(bodyParser.xml())
 //Simple in-memory data structure for storing applications
 applications = {}
 
+//Simple in-memory storage for rate limiting
+rateLimits = {
+    countLimit: 1 * 15, //messages per minute times 15 minutes
+    currentCount: 0,
+    resetTime: new Date().getTime()
+}
+
 /**
  * Generates random string
  *
@@ -22,17 +29,17 @@ function randomString() {
 }
 
 /**
- * Generates a random time to delay events up to 10 seconds
- */
-function randomTime() {
-    return Math.random() * 10000
-}
-
-/**
  * Gets the current datetime in ISO format
  */
 function getCurrentDateTime() {
     return new Date().toISOString()
+}
+
+/**
+ * Generates a random time to delay events up to 10 seconds
+ */
+function randomTime() {
+    return Math.random() * 10000
 }
 
 /**
@@ -67,30 +74,49 @@ function callbackDestinationLookup(applicationId) {
  * Route to handle incoming message requests
  */
 app.post('/api/v2/users/:accountId/messages', function (req, res)  {
-    var accountId = req.params["accountId"]
-    var requestBody = req.body
-    var to = requestBody["to"]
-    var from = requestBody["from"]
-    var text = requestBody["text"]
-    var applicationId = requestBody["applicationId"]
-    var tag = requestBody["tag"]
-    var segmentCount = text.length/160
-    var id = randomString()
-    var time = getCurrentDateTime() 
-    var responseBody = {
-        to: to,
-        from: from,
-        text: text,
-        applicationId: applicationId,
-        tag: tag,
-        segmentCount: segmentCount,
-        owner: from,
-        id: id,
-        time: time,
-        direction: "out"
+    if (rateLimits['resetTime'] <= new Date().getTime()) {
+        rateLimits['resetTime'] = new Date().getTime()
+        rateLimits['currentCount'] = 0
     }
-    messageDeliveredEvent(responseBody)
-    res.json(responseBody)
+
+    if (rateLimits['currentCount'] === 0) {
+        rateLimits['resetTime'] = new Date().getTime() + (1000 * 60 * 15)
+    }
+
+    rateLimits['currentCount'] += 1
+    if (rateLimits['currentCount'] >= rateLimits['countLimit']) {
+        var responseBody = {
+            type: "max-message-queue-size-exceeded",
+            description: "The SMS queue for your account is full and cannot accept more messages right now. Your allowed rate is 60 messages per minute. The capacity of this queue is 900 messages (15 minutes). Reduce your message sending rate, or contact support to increase your allowed rate."
+        }
+        res.json(responseBody)
+    }
+    else {
+        var accountId = req.params["accountId"]
+        var requestBody = req.body
+        var to = requestBody["to"]
+        var from = requestBody["from"]
+        var text = requestBody["text"]
+        var applicationId = requestBody["applicationId"]
+        var tag = requestBody["tag"]
+        var segmentCount = text.length/160
+        var id = randomString()
+        var time = getCurrentDateTime() 
+        var responseBody = {
+            to: to,
+            from: from,
+            text: text,
+            applicationId: applicationId,
+            tag: tag,
+            segmentCount: segmentCount,
+            owner: from,
+            id: id,
+            time: time,
+            direction: "out"
+        }
+        messageDeliveredEvent(responseBody)
+        res.json(responseBody)
+    }
 })
 
 /**
