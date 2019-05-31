@@ -15,6 +15,12 @@ Future development plans will include emulation of 429 error codes, and other st
 
 ## Commands
 
+Clone and enter the repo
+```
+git clone git@github.com:jmulford-bandwidth/Bandwidth-Emulator.git
+cd Bandwidth-Emulator
+```
+
 Install dependencies
 ```
 npm install
