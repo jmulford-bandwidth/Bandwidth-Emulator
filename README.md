@@ -1,8 +1,17 @@
-# Bandwidth API Emulator-ish
+# Bandwidth Messaging API Emulator
 
-An API Emulator-ish for Bandwidth's Voice, Messaging, and Numbers APIs. 
+An API Emulator for Bandwidth's Messaging and Account Management APIs. 
 
-Doesn't actually do any phone calls, text messaging, or order numbering.
+This tool is used for developers who want to become familiar with Bandwidth's Messaging and Account Management APIs without having to directly make API calls against these APIs. After installing, simply run `node emulator.js` to start the emulator. API requests on the server url (default: localhost:3000) can be made to create a [Messaging Application](https://dev.bandwidth.com/v2-messaging/applications/postApplications.html) and send a [Text Message](https://dev.bandwidth.com/v2-messaging/methods/createMessage.html). [Callbacks](https://dev.bandwidth.com/v2-messaging/events/messageEvents.html) are sent to your callback URL defined in the Messaging Application for messages sent and received.
+
+Take note that since this tool does not interact with Bandwidth's Messaging and Account Management APIs, the experience against these APIs live will be slightly different
+* Requests made on this tool will not actually send text messages or create Bandwidth applications
+  * If you want to see a simulation of sending and receiving text messages, you can go to the home page of the application (default: localhost:3000) to view a phone GUI that simulates this functionality
+* The base URLs for the Messaging and Account Management APIs are messaging.bandwidth.com and dashboard.bandwidth.com respectively. This emulator uses these APIs on the same end point for simplicity purposes
+* Authentication is limited to having a valid application ID for sending a message. Account IDs, usernames, password, phone numbers, API tokens, and API secrets are not necessary.
+  * Note: some value for Account ID must be defined in the URL for making requests. Any value like `1234` will be sufficient
+
+Future development plans will include emulation of 429 error codes, and other stuff that we deem necessary
 
 ## Commands
 
@@ -11,12 +20,12 @@ Install dependencies
 npm install
 ```
 
-Launch emulator-ish
+Launch the server
 ```
-node index.js
+node emulator.js
 ```
 
-Run demo script
+Display sample HTTP requests
 ```
-sh script.sh
+cat curl-examples.txt
 ```

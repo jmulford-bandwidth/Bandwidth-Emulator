@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(bodyParser.xml())
 
 //Global variable for storing applications
-//Yes global variables are bad but this is sufficient for a small emulator-ish
+//Yes global variables are bad but this is sufficient for a small emulators
 applications = {}
 
 /**
@@ -76,7 +76,7 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
     var text = requestBody["text"]
     var applicationId = requestBody["applicationId"]
     var tag = requestBody["tag"]
-    var segmentCount = 1 //len(text) / 160??
+    var segmentCount = text.length/160
     var id = randomString()
     var time = getCurrentDateTime() 
     var responseBody = {
@@ -141,4 +141,4 @@ app.post('/callbacks', function (req, res)  {
     res.json(requestBody)
 })
 
-app.listen(port, () => console.log(`Bandwidth Emulator-ish is now listening on port ${port}!`))
+app.listen(port, () => console.log(`Bandwidth Emulator is now listening on port ${port}!`))
