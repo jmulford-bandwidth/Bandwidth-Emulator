@@ -29,3 +29,29 @@ Display sample HTTP requests
 ```
 cat curl-examples.txt
 ```
+
+Sample HTTP requests and responses flow
+```
+curl -X POST http://localhost:3000/api/accounts/ID/applications -d '<Application>    <ServiceType>Messaging-V2</ServiceType>    <AppName>Production Server</AppName>    <CallbackUrl>http://my-req-bin.herokuapp.com/tr3zcctr</CallbackUrl>    <CallbackCreds>      <UserId>Your-User-id</UserId>      <Password>Your-Password</Password>  </CallbackCreds></Application>' --header 'content-type: application/xml'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ApplicationProvisioningResponse>
+  <Application>
+    <ApplicationId>rvz2cfvm34xsnyt1vubapf249phjkygcomshws06ue</ApplicationId>
+    <ServiceType>Messaging-V2</ServiceType>
+    <AppName>Production Server</AppName>
+    <CallbackUrl>http://my-req-bin.herokuapp.com/tr3zcctr</CallbackUrl>
+    <CallbackCreds>
+      <UserId>Your-User-id</UserId>
+      <Password>Your-Password</Password>
+    </CallbackCreds>
+  </Application>
+</ApplicationProvisioningResponse>
+
+curl -X POST http://localhost:3000/api/v2/users/ID/messages -d '{ "from": "+18888888888", "to": "+19999999999",ag", "applicationId": "rvz2cfvm34xsnyt1vubapf249phjkygcomshws06ue"}' --header 'content-type: application/json'
+{"to":"+19999999999","from":"+18888888888","text":"Hi friend","applicationId":"rvz2cfvm34xsnyt1vubapf249phjkygcomshws06ue","tag":"My tag","segmentCount":0.05625,"owner":"+18888888888","id":"7n0lkh9jdbd4n0yenvjx3nh2e4rg7rvg4aekc4hxw9v","time":"2019-05-31T18:19:27.209Z","direction":"out"} 
+```
+
+From the above flow, a callback similar to the one shown below will be sent to the `CallbackUrl`
+```
+[{"type":"message-delivered","time":"2019-05-31T18:19:34.024Z","message":{"to":"+19999999999","from":"+18888888888","text":"Hi friend","applicationId":"rvz2cfvm34xsnyt1vubapf249phjkygcomshws06ue","tag":"My tag","segmentCount":0.05625,"owner":"+18888888888","id":"7n0lkh9jdbd4n0yenvjx3nh2e4rg7rvg4aekc4hxw9v","time":"2019-05-31T18:19:27.209Z","direction":"out"}}]
+```

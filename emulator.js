@@ -41,11 +41,11 @@ function getCurrentDateTime() {
  */
 function messageDeliveredEvent(responseBody) {
     setTimeout(function() {
-        var callbackBody = {
+        var callbackBody = [{
             type: "message-delivered",
             time: getCurrentDateTime(),
             message: responseBody
-        }
+        }]
         callbackDestination = callbackDestinationLookup(responseBody["applicationId"])
         request({
             method: 'POST',
