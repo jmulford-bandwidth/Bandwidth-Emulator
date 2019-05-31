@@ -9,8 +9,7 @@ const xml2js = require('xml2js') //used to parse outgoing xml objects
 app.use(express.json())
 app.use(bodyParser.xml())
 
-//Global variable for storing applications
-//Yes global variables are bad but this is sufficient for a small emulators
+//Simple in-memory data structure for storing applications
 applications = {}
 
 /**
@@ -68,7 +67,6 @@ function callbackDestinationLookup(applicationId) {
  * Route to handle incoming message requests
  */
 app.post('/api/v2/users/:accountId/messages', function (req, res)  {
-    //todo: fix segmentCount
     var accountId = req.params["accountId"]
     var requestBody = req.body
     var to = requestBody["to"]
