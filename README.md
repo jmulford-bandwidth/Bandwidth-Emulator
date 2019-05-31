@@ -6,7 +6,6 @@ This tool is used for developers who want to become familiar with Bandwidth's Me
 
 Take note that since this tool does not interact with Bandwidth's Messaging and Account Management APIs, the experience against these APIs live will be slightly different
 * Requests made on this tool will not actually send text messages or create Bandwidth applications
-  * If you want to see a simulation of sending and receiving text messages, you can go to the home page of the application (default: localhost:3000) to view a phone GUI that simulates this functionality
 * The base URLs for the Messaging and Account Management APIs are messaging.bandwidth.com and dashboard.bandwidth.com respectively. This emulator uses these APIs on the same end point for simplicity purposes
 * Authentication is limited to having a valid application ID for sending a message. Account IDs, usernames, password, phone numbers, API tokens, and API secrets are not necessary.
   * Note: some value for Account ID must be defined in the URL for making requests. Any value like `1234` will be sufficient
