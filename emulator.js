@@ -14,7 +14,7 @@ applications = {}
 
 //Simple in-memory storage for rate limiting
 rateLimits = {
-    countLimit: 1 * 15, //messages per minute times 15 minutes
+    countLimit: 10, //messages per minute
     currentCount: 0,
     resetTime: new Date().getTime()
 }
@@ -80,14 +80,14 @@ app.post('/api/v2/users/:accountId/messages', function (req, res)  {
     }
 
     if (rateLimits['currentCount'] === 0) {
-        rateLimits['resetTime'] = new Date().getTime() + (1000 * 60 * 15)
+        rateLimits['resetTime'] = new Date().getTime() + (1000 * 60)
     }
 
     rateLimits['currentCount'] += 1
     if (rateLimits['currentCount'] >= rateLimits['countLimit']) {
         var responseBody = {
             type: "max-message-queue-size-exceeded",
-            description: "The SMS queue for your account is full and cannot accept more messages right now. Your allowed rate is 60 messages per minute. The capacity of this queue is 900 messages (15 minutes). Reduce your message sending rate, or contact support to increase your allowed rate."
+            description: "The SMS queue for your account is full and cannot accept more messages right now. Your allowed rate is 60 messages per minute. The capacity of this queue is 10 messages (1 minute). Reduce your message sending rate, or contact support to increase your allowed rate."
         }
         res.json(responseBody)
     }
